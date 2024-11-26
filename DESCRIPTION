@@ -1,11 +1,15 @@
 Package: BioSeqAligner
 Type: Package
-Title: What the Package Does (Title Case)
+Title: A DNA sequence alignment and visualization tool
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Kashvi Shah
+Maintainer: <kashvishah4@gmail.com>
+Description: Providing tools for sequence alignments, searching the motifs in the 
+    sequences and visualizing the sequence alignment. This package implements sequence 
+    alignments and funcitons for searching motifs and visualization of the sequence. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/Code-krafter22/BioSeqAligner
+BugReports: https://github.com/Code-krafter22/BioSeqAligner/issues
+RoxygenNote: 7.3.2
