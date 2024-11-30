@@ -16,6 +16,6 @@ A character string representing the reverse complement of the input DNA sequence
 This function computes the reverse complement of a given DNA sequence by reversing it and substituting complementary bases.
 }
 \examples{
-sequence <- ("ATCGCTCA") Returns "TGAGCGAT"
+sequence <- ("ATCGCTCA") # Returns "TGAGCGAT"
 
 }
