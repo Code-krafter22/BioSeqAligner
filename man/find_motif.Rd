@@ -7,13 +7,20 @@
 find_motif(seq, motif)
 }
 \arguments{
-\item{seq}{DNA sequence (character string)}
+\item{seq}{A character string representing the DNA sequence to search.}
 
-\item{motif}{Motif to search for (character string)}
+\item{motif}{A character string representing the motif to search for within the sequence.}
 }
 \value{
 #A vector of starting positions where the motif occurs
+If no matches are found, it returns an empty vector.
+
+#' @examples
+find_motif("ATCGATCGATGC", "ATC")  # Returns positions 1 and 5
+find_motif("GATCGATCGTAT", "GAT")  # Returns positions 1 and 6
+find_motif("AAAAAA", "TT")         # Returns an empty vector
 }
 \description{
-Locates all positions of a motif in a sequence.
+This function identifies all starting positions of a specified motif within a given DNA sequence.
+It performs a linear scan and returns the positions where the motif matches the sequence.
 }

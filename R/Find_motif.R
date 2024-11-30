@@ -1,9 +1,20 @@
-#' Locates all positions of a motif in a sequence.
+#' @title Locates all positions of a motif in a sequence.
 #'
-#' @param seq DNA sequence (character string)
-#' @param motif Motif to search for (character string)
+#' @description
+#' This function identifies all starting positions of a specified motif within a given DNA sequence.
+#' It performs a linear scan and returns the positions where the motif matches the sequence.
+#'
+#' @param seq A character string representing the DNA sequence to search.
+#' @param motif A character string representing the motif to search for within the sequence.
 #'
 #' @return #A vector of starting positions where the motif occurs
+#' If no matches are found, it returns an empty vector.
+#'
+#' #' @examples
+#' find_motif("ATCGATCGATGC", "ATC")  # Returns positions 1 and 5
+#' find_motif("GATCGATCGTAT", "GAT")  # Returns positions 1 and 6
+#' find_motif("AAAAAA", "TT")         # Returns an empty vector
+#'
 #' @export
 #'
 find_motif <- function(seq, motif) {

@@ -1,6 +1,6 @@
 Package: BioSeqAligner
 Type: Package
-Title: A DNA sequence alignment and visualization tool
+Title: A DNA sequence alignment, visualization and manipulation tool
 Version: 0.1.0
 Author: Kashvi Shah
 Maintainer: <kashvishah4@gmail.com>
