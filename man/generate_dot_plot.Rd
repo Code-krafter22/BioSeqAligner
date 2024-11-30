@@ -19,7 +19,7 @@ This function creates a dot plot comparing two DNA sequences, highlighting match
 The dot plot visualizes sequence similarities and can be useful for identifying regions of alignment.
 }
 \examples{
-seq1<- seq1 <- "ATCGATCGATGC"
+seq1 <- "ATCGATCGATGC"
 seq2 <- "ATCCGATCGTAT"
 generate_dot_plot(seq1, seq2)
 }

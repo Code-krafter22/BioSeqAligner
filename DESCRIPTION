@@ -13,3 +13,7 @@ LazyData: true
 URL: https://github.com/Code-krafter22/BioSeqAligner
 BugReports: https://github.com/Code-krafter22/BioSeqAligner/issues
 RoxygenNote: 7.3.2
+Imports:
+    ggplot2,
+    stringi,
+    stringr
