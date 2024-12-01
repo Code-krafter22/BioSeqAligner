@@ -48,29 +48,49 @@ transcribe_dna <- function(sequence) {
   return(rna_sequence)
 }
 #'
-#' @title Calculate GC Content of a DNA Sequence
+#' @title Create a DNASequence Object
 #'
-#' @description This function calculates the GC content (percentage of guanine and cytosine) in a given DNA sequence.
+#' @description Constructs an S3 object of class \code{DNASequence} representing a DNA sequence.
+#' This constructor validates the input to ensure it contains only valid DNA bases (A, C, G, T).
 #'
 #' @param sequence A character string representing a DNA sequence. Must contain only A, C, G, and T.
+#'
+#' @return An object of class \code{DNASequence} with the sequence attribute.
+#'
+#' @examples
+#' dna_seq <- DNASequence("ATGCGC")
+#' print(dna_seq)
+#'
+#' @export
+DNASequence <- function(sequence) {
+  if (!grepl("^[ACGT]*$", sequence)) {
+    stop("Input is not a valid DNA sequence.")
+  }
+  structure(sequence, class = "DNASequence", sequence = sequence)
+}
+
+#' @title Calculate GC Content of a DNA Sequence (S3 Method)
+#'
+#' @description Calculates the GC content (percentage of guanine and cytosine) in a DNA sequence represented by a \code{DNASequence} object.
+#'
+#' @param sequence An object of class \code{DNASequence}.
+#'
 #' @return A numeric value representing the GC content percentage of the DNA sequence.
 #'
 #' @examples
-#' gc_content("ATGC") # Returns 50
-#' gc_content("GCGC") # Returns 100
-#' gc_content("ATAT") # Returns 0
+#' dna_seq <- DNASequence("ATGCGC")
+#' gc_content.S3(dna_seq)  # Returns 66.67
 #'
 #' @import stringr
 #'
 #' @export
-gc_content <- function(sequence) {
-  if (!grepl("^[ACGT]*$", sequence)) {
-    stop("Input is not a valid DNA sequence.")
+gc_content.S3 <- function(sequence) {
+  if (!inherits(sequence, "DNASequence")) {
+    stop("Input must be of class 'DNASequence'.")
   }
-
-  # Calculate GC content
-  gc_count <- sum(str_count(sequence, "[GC]"))
-  gc_percent <- (gc_count / nchar(sequence)) * 100
-
+  sequence_value <- attr(sequence, "sequence")
+  gc_count <- sum(str_count(sequence_value, "[GC]"))
+  gc_percent <- (gc_count / nchar(sequence_value)) * 100
   return(gc_percent)
 }
+
