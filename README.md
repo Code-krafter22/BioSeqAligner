@@ -96,13 +96,15 @@ reversing it and substituting complementary bases.
 #### A. **Method 1: Define sequence and then call the function**
 
 -   seq &lt;- (“ATCGATCGATGC”)
+
 -   reverse\_complement(seq)
--   ***returns \[1] “GCATCGATCGAT” ***
+***returns \[1] “GCATCGATCGAT” ***
 
 #### B. **Method 2: Specify the sequences in the function**
 
 -   reverse\_complement(“GATCGATCGTAT”)
--   ***returns \[1] “ATACGATCGATC” ***
+
+***returns \[1] “ATACGATCGATC” ***
 
 ### 4. **transcribe\_dna()**:
 
@@ -116,13 +118,16 @@ thymine (T) with uracil (U).
 #### A. **Method 1: Define sequence and then call the function**
 
 -   seq &lt;- (“ATCGATCGATGC”)
+
 -   transcribe\_dna(seq)
--   ***returns \[1] “AUCGAUCGAUGC” ***
+
+***returns \[1] “AUCGAUCGAUGC” ***
 
 #### B. **Method 2: Specify the sequences in the function**
 
--   transcribe\_dna(“GATCGATCGTAT”)
--   ***returns \[1] “GAUCGAUCGUAU” ***
+transcribe\_dna(“GATCGATCGTAT”)
+
+***returns \[1] “GAUCGAUCGUAU” ***
 
 ### 5. **gc\_content()**:
 
@@ -137,11 +142,14 @@ represented by a DNASequence object.
 
 #### A. **Method 1: Define sequence and then call the function**
 
--   dna\_seq &lt;- DNASequence(“ATGCGC”)
--   gc\_content.S3(dna\_seq)
--   ***returns \[1] 66.66667 ***
+dna\_seq &lt;- DNASequence(“ATGCGC
+
+gc\_content.S3(dna\_seq)
+
+***returns \[1] 66.66667 ***
 
 #### B. **Method 2: Specify the sequences in the function**
 
--   gc\_content.S3(DNASequence(“ATGC”))
--   ***returns \[1] 50 ***
+gc\_content.S3(DNASequence(“ATGC”))
+
+***returns \[1] 50 ***
