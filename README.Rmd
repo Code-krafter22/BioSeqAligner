@@ -1,0 +1,175 @@
+---
+title: "BioSeqAligner"
+author: "Kashvi Shah"
+date: "2024-12-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## **Introduction** 
+  BioSeqAligner is a R package designed for DNA sequence analysis. It includes functions for motif detection, sequence alignment visualization, reverse complement calculation, DNA-to-RNA transcription, and GC content calculation.
+
+## **Installation**
+For local or GitHub installations:
+devtools::install_github("Code-krafter22/BioSeqAligner")
+
+library(BioSeqAligner)
+
+## **Packages required**
+
++ install.packages("ggplot2")
+
++ install.packages("stringi")
+
++ install.packages("stringr")
+
+## **Load required libraries**
+
++ library(ggplot2)
+
++ library(stringi)
+
++ library(stringr)
+
+## **Using BioSeqAligner**
+
+### 1. **find_motif() **: 
+
+This function identifies all starting positions of a specified motif within a DNA sequence. It performs a linear scan and returns the positions where the motif matches the sequence.
+
+#### A. **Method 1: Define sequence and motif and then call the function**
+   seq <- ("ATCGATCGATGC"), motif <- ("ATC")
+  
+   find_motif(seq,motif)
+   
++ ***returns [1] 1 5***
+
+#### B. **Method 2: Specify the sequence and motif in the function**
+
+i. find_motif("GATCGATCGTAT", "GAT")
+  
++ ***Returns positions 1 and 6***
+
+ii. find_motif("AAAAAA", "TT") 
+  
++ ***Returns an empty vector***
+
+
+### 2. **generate_dot_plot()**: 
+
+This  function creates a dot plot to visualize the alignment between two DNA sequences.
+
+#### **Library required**
+
++ *library(ggplot2)*
+
+#### A. **Method 1: Define sequence and then call the function**
+   + seq1 <- ("ATCGATCGATGC"), Seq2 <- ("ATCGGCTACGTA")
+   
+   + generate_dot_plot(seq1,seq2)
+
+#### B. **Method 2: Specify the sequences in the function**
+
++ generate_dot_plot("GATCGATCGTAT", "GATATCGTCATC")
+
+***Both method returns a graph plot for sequence alignment where X-axis contains the Sequence 1 and Y-axis contains Sequence 2. The dark red dot signifies the similarities in the sequence and the blue dot signifies the dissimilarities in the sequence.***
+
+### **Dot plot**
+
+```{r dot-plot, echo=FALSE}
+# Load necessary package
+library(ggplot2)
+
+# Define the function
+generate_dot_plot <- function(seq1, seq2) {
+  # Create matrix to store matches
+  dot_plot_matrix <- matrix(0, nrow = nchar(seq1), ncol = nchar(seq2))
+
+  # Fill matrix with match indicators
+  for (i in 1:nchar(seq1)) {
+    for (j in 1:nchar(seq2)) {
+      if (substr(seq1, i, i) == substr(seq2, j, j)) {
+        dot_plot_matrix[i, j] <- 1
+      }
+    }
+  }
+
+  # Convert matrix into data frame
+  dot_plot_data <- expand.grid(Seq1_Pos = 1:nchar(seq1), Seq2_Pos = 1:nchar(seq2))
+  dot_plot_data$Match <- as.vector(dot_plot_matrix)
+
+  # Plot with ggplot2 using namespace-safe syntax
+  ggplot2::ggplot(dot_plot_data, ggplot2::aes(x = .data$Seq1_Pos, y = .data$Seq2_Pos)) +
+    ggplot2::geom_point(ggplot2::aes(color = factor(.data$Match)), size = 3) +
+    ggplot2::scale_color_manual(values = c("0" = "lightblue", "1" = "darkred")) +
+    ggplot2::labs(
+      title = "Dot Plot for Sequence Alignment",
+      x = "Seq1 Position",
+      y = "Seq2 Position"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "none")
+}
+
+# Generate and display the plot
+generate_dot_plot("ACGTGCGTACGT", "ACTGACGTTGCT")
+```
+  
+### 3. **reverse_complement()**: 
+
+This function computes the reverse complement of a given DNA sequence by reversing it and substituting complementary bases.
+
+#### **Library required**
+
++ *library(stringi)*
+
+#### A. **Method 1: Define sequence and then call the function**
+   + seq <- ("ATCGATCGATGC") 
+   + reverse_complement(seq)
+   + ***returns [1] "GCATCGATCGAT" ***
+
+#### B. **Method 2: Specify the sequences in the function**
+
++ reverse_complement("GATCGATCGTAT")
++ ***returns [1] "ATACGATCGATC" ***
+
+### 4. **transcribe_dna()**: 
+
+This function converts a DNA sequence into an RNA sequence by replacing thymine (T) with uracil (U).
+
+#### **Library required**
+
++ *library(stringi)*
+
+#### A. **Method 1: Define sequence and then call the function**
+   + seq <- ("ATCGATCGATGC") 
+   + transcribe_dna(seq)
+   + ***returns [1] "AUCGAUCGAUGC" ***
+
+#### B. **Method 2: Specify the sequences in the function**
+
++ transcribe_dna("GATCGATCGTAT")
++ ***returns [1] "GAUCGAUCGUAU" ***
+
+### 5. **gc_content()**: 
+
+Constructs an S3 object representing a DNA sequence with validation to ensure it contains only valid DNA bases (A, C, G, T). Calculates the GC content (percentage of guanine and cytosine) in a DNA sequence represented by a DNASequence object.
+
+#### **Library required**
+
++ *library(stringr)*
+
+#### A. **Method 1: Define sequence and then call the function**
+   + dna_seq <- DNASequence("ATGCGC")
+   + gc_content.S3(dna_seq)
+   + ***returns [1] 66.66667 ***
+
+#### B. **Method 2: Specify the sequences in the function**
+
++ gc_content.S3(DNASequence("ATGC"))
++ ***returns [1] 50 ***
