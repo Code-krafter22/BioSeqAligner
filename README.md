@@ -96,7 +96,7 @@ reversing it and substituting complementary bases.
 
 -   reverse_complement(“GATCGATCGTAT”)
 
--   ***Returns [1] “ATACGATCGATC” ***
+-   ***Returns [1] “ATACGATCGATC”***
 
 ### 4. **transcribe\_dna()**:
 
@@ -111,7 +111,7 @@ thymine (T) with uracil (U).
 
 -    transcribe_dna(“GATCGATCGTAT”)
 
--    ***Returns [1] “GAUCGAUCGUAU” ***
+-    ***Returns [1] “GAUCGAUCGUAU”***
 
 ### 5. **gc_content()**:
 
@@ -128,4 +128,23 @@ represented by a DNASequence object.
 
 -   gc_content.S3(DNASequence(“ATGC”))
 
--   ***Returns [1] 50 ***
+-   ***Returns [1] 50***
+
+## **Error**:
+
+-    **Invalid DNA Sequences**: Functions will stop and display an error if the input contains characters other than A, C, G, or T.
+
+#### **Example**
+
+-   transcribe_dna("ATBX")
+-   ***Error: Input is not a valid DNA sequence***
+
+### **License**:
+
+-   This project is licensed under the MIT License. See the LICENSE file for details.
+
+### **Contact**:
+
+-   For questions or feedback, reach out via GitHub Issues.
+
+## **Happy sequencing!** 
