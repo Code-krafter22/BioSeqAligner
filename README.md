@@ -1,18 +1,32 @@
-## R Markdown
+# **Introduction**
+*Effortlessly analyze DNA sequences using R*
 
-## **Introduction**
+## **Overview**
 
-BioSeqAligner is a R package designed for DNA sequence analysis. It
-includes functions for motif detection, sequence alignment
+BioSeqAligner is a R package designed for DNA sequence analysis. Whether you're a bioinformatician, 
+researcher, or student, this package provides intuitive functions 
+for for motif detection, sequence alignment
 visualization, reverse complement calculation, DNA-to-RNA transcription,
-and GC content calculation.
+and GC content calculation. It simplifies essential function for manipulating and analyzing DNA sequences.
+
+## **Key Features**
+
+
+-   🔍 Motif Finder: Identify all occurrences of a motif in a DNA sequence.
+-   🧬 Reverse Complement: Generate the reverse complement of a sequence.
+-   🧪 DNA to RNA Transcription: Convert DNA sequences to RNA by replacing thymine (T) with uracil (U).
+-   📊 GC Content Calculator: Calculate the percentage of guanine (G) and cytosine (C) in your DNA sequence using S3 objects.
+-   📈 Dot Plot Visualization: Create dot plots to visualize sequence alignments.
 
 ## **Installation**
 
-For local or GitHub installations:
-devtools::install\_github(“Code-krafter22/BioSeqAligner”)
+#### **For Github**
 
-library(BioSeqAligner)
+You can install this package directly from github
+
+-   devtools::install_github(“Code-krafter22/BioSeqAligner”)
+
+-   library(BioSeqAligner)
 
 ## **Packages required**
 
@@ -32,31 +46,20 @@ library(BioSeqAligner)
 
 ## **Using BioSeqAligner**
 
-### 1. **find\_motif() **:
+### 1. **find_motif() **:
 
 This function identifies all starting positions of a specified motif
 within a DNA sequence. It performs a linear scan and returns the
 positions where the motif matches the sequence.
 
-#### A. **Method 1: Define sequence and motif and then call the function**
 
-seq &lt;- (“ATCGATCGATGC”), motif &lt;- (“ATC”)
+#### **Example**
 
-find\_motif(seq,motif)
+-   find_motif(“GATCGATCGTAT”, “GAT”)
 
--   ***returns [1] 1 5***
+-   ***Returns [1] 1 5***
 
-#### B. **Method 2: Specify the sequence and motif in the function**
-
-1.  find\_motif(“GATCGATCGTAT”, “GAT”)
-
--   ***Returns [1] 1 6***
-
-1.  find\_motif(“AAAAAA”, “TT”)
-
--   ***Returns an empty vector***
-
-### 2. **generate\_dot\_plot()**:
+### 2. **generate_dot_plot()**:
 
 This function creates a dot plot to visualize the alignment between two
 DNA sequences.
@@ -65,26 +68,22 @@ DNA sequences.
 
 -   *library(ggplot2)*
 
-#### A. **Method 1: Define sequence and then call the function**
+#### **Example**
 
--   seq1 &lt;- (“ATCGATCGATGC”), Seq2 &lt;- (“ATCGGCTACGTA”)
+-   generate_dot_plot(“GATCGATCGTAT”, “GATATCGTCATC”)
 
--   generate\_dot\_plot(seq1,seq2)
-
-#### B. **Method 2: Specify the sequences in the function**
-
--   generate\_dot\_plot(“GATCGATCGTAT”, “GATATCGTCATC”)
-
-***Both method returns a graph plot for sequence alignment where X-axis
+***Returns a graph plot for sequence alignment where X-axis
 contains the Sequence 1 and Y-axis contains Sequence 2. The dark red dot
 signifies the similarities in the sequence and the blue dot signifies
 the dissimilarities in the sequence.***
 
 ### **Dot plot**
 
+-  Overview of how the plot looks
+
 ![](README_files/figure-markdown_strict/dot-plot-1.png)
 
-### 3. **reverse\_complement()**:
+### 3. **reverse_complement()**:
 
 This function computes the reverse complement of a given DNA sequence by
 reversing it and substituting complementary bases.
@@ -93,18 +92,11 @@ reversing it and substituting complementary bases.
 
 -   *library(stringi)*
 
-#### A. **Method 1: Define sequence and then call the function**
+#### **Example**
 
--   seq &lt;- (“ATCGATCGATGC”)
+-   reverse_complement(“GATCGATCGTAT”)
 
--   reverse\_complement(seq)
-***returns \[1] “GCATCGATCGAT” ***
-
-#### B. **Method 2: Specify the sequences in the function**
-
--   reverse\_complement(“GATCGATCGTAT”)
-
-***returns \[1] “ATACGATCGATC” ***
+-   ***Returns [1] “ATACGATCGATC” ***
 
 ### 4. **transcribe\_dna()**:
 
@@ -115,21 +107,13 @@ thymine (T) with uracil (U).
 
 -   *library(stringi)*
 
-#### A. **Method 1: Define sequence and then call the function**
+#### **Example**
 
--   seq &lt;- (“ATCGATCGATGC”)
+-    transcribe_dna(“GATCGATCGTAT”)
 
--   transcribe\_dna(seq)
+-    ***Returns [1] “GAUCGAUCGUAU” ***
 
-***returns \[1] “AUCGAUCGAUGC” ***
-
-#### B. **Method 2: Specify the sequences in the function**
-
-transcribe\_dna(“GATCGATCGTAT”)
-
-***returns \[1] “GAUCGAUCGUAU” ***
-
-### 5. **gc\_content()**:
+### 5. **gc_content()**:
 
 Constructs an S3 object representing a DNA sequence with validation to
 ensure it contains only valid DNA bases (A, C, G, T). Calculates the GC
@@ -140,16 +124,8 @@ represented by a DNASequence object.
 
 -   *library(stringr)*
 
-#### A. **Method 1: Define sequence and then call the function**
+#### **Example**
 
-dna\_seq &lt;- DNASequence(“ATGCGC
+-   gc_content.S3(DNASequence(“ATGC”))
 
-gc\_content.S3(dna\_seq)
-
-***returns \[1] 66.66667 ***
-
-#### B. **Method 2: Specify the sequences in the function**
-
-gc\_content.S3(DNASequence(“ATGC”))
-
-***returns \[1] 50 ***
+-   ***Returns [1] 50 ***
