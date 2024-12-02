@@ -1,5 +1,5 @@
 # **Introduction**
-*Effortlessly analyze DNA sequences using R*
+*Genomic analysis made elegant using R*
 
 ## **Overview**
 
