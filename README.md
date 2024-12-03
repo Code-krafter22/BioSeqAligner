@@ -5,7 +5,7 @@
 
 BioSeqAligner is a R package designed for DNA sequence analysis. Whether you're a bioinformatician, 
 researcher, or student, this package provides intuitive functions 
-for for motif detection, sequence alignment
+for motif detection, sequence alignment
 visualization, reverse complement calculation, DNA-to-RNA transcription,
 and GC content calculation. It simplifies essential function for manipulating and analyzing DNA sequences.
 
