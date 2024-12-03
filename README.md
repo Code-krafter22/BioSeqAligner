@@ -46,7 +46,7 @@ You can install this package directly from github
 
 ## **Using BioSeqAligner**
 
-### 1. **find_motif() **:
+### 1. **find_motif()**:
 
 This function identifies all starting positions of a specified motif
 within a DNA sequence. It performs a linear scan and returns the
