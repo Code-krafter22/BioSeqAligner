@@ -217,7 +217,9 @@ batch_align("ACGTGGA", refs, method = "local")
 ### 12. **read_fasta()**
 
 Reads a FASTA file into a named character vector of sequences, so you work
-from real files instead of pasted strings.
+from real files instead of pasted strings. `path` must be an existing file —
+it is never treated as anything else, so a string that happens to look like
+a path can't be confused with literal content.
 
 ```r
 read_fasta("sequences.fasta")
@@ -225,7 +227,21 @@ read_fasta("sequences.fasta")
 # "ACGTGGCA" "TTTTGGCC"
 ```
 
-### 13. **write_fasta()**
+### 13. **parse_fasta()**
+
+Parses FASTA-formatted text you already have in memory (e.g. pasted text
+from a form) into the same named character vector `read_fasta()` returns.
+Unlike `read_fasta()`, it never touches the filesystem — use this, not
+`read_fasta()`, whenever the input is already-loaded text rather than a
+path you want opened.
+
+```r
+parse_fasta(">geneA\nACGT\nGGCA\n>geneB\nTTTT\nGGCC")
+#      geneA      geneB
+# "ACGTGGCA" "TTTTGGCC"
+```
+
+### 14. **write_fasta()**
 
 Writes a named character vector of sequences back out to a FASTA file,
 wrapping long sequences at a fixed line width.
@@ -235,10 +251,11 @@ write_fasta(c(geneA = "ACGTGGCA", geneB = "TTTTGGCC"), "out.fasta")
 # Writes a FASTA file with headers >geneA / >geneB and wrapped sequence lines.
 ```
 
-### 14. **read_fastq()**
+### 15. **read_fastq()**
 
 Parses a FASTQ file into a data frame of read IDs, sequences, and quality
-strings.
+strings. `path` must be an existing file, for the same reason as
+`read_fasta()`.
 
 ```r
 read_fastq("reads.fastq")
@@ -246,7 +263,18 @@ read_fastq("reads.fastq")
 # 1  r1     ACGT    IIII
 ```
 
-### 15. **nj_tree()**
+### 16. **parse_fastq()**
+
+Parses FASTQ-formatted text you already have in memory into the same data
+frame `read_fastq()` returns, without touching the filesystem.
+
+```r
+parse_fastq("@r1\nACGT\n+\nIIII")
+#   id sequence quality
+# 1 r1     ACGT    IIII
+```
+
+### 17. **nj_tree()**
 
 Computes a distance matrix from an MSA and builds a neighbour-joining
 phylogenetic tree, bridging alignment straight into phylogenetics. Requires
@@ -257,7 +285,7 @@ nj_tree(m)
 # Returns an object of class "phylo" and plots the neighbour-joining tree.
 ```
 
-### 16. **launch_aligner()**
+### 18. **launch_aligner()**
 
 Launches an interactive Shiny app that ties the package together: paste or
 upload sequences, run pairwise or multiple sequence alignment, and view
@@ -269,7 +297,7 @@ launch_aligner()
 # Opens the BioSeqAligner Shiny app in your browser.
 ```
 
-### 17. **design_primers()**
+### 19. **design_primers()**
 
 Runs the real Primer3 engine (`primer3_core`) on a target sequence to design
 forward/reverse primer pairs, using Primer3's own thermodynamic model for
@@ -286,7 +314,7 @@ design_primers(target, product_size_range = c(70, 120), num_return = 3)
 # 3       2 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA  59.759   58.208          109 2.033219
 ```
 
-### 18. **design_and_validate_primers()**
+### 20. **design_and_validate_primers()**
 
 Runs `design_primers()` and immediately screens every candidate primer with
 `batch_align()` against a set of sequences you supply (the intended target

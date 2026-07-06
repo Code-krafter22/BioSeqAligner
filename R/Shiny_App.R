@@ -73,7 +73,7 @@ launch_aligner <- function() {
           gap_open = input$gap_open, gap_extend = input$gap_extend
         ))
       } else {
-        seqs <- read_fasta(strsplit(input$fasta, "\n")[[1]])
+        seqs <- parse_fasta(input$fasta)
         list(type = "msa", obj = msa_align(seqs,
           submat = submat(),
           gap_open = input$gap_open, gap_extend = input$gap_extend

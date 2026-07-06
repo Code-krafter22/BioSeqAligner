@@ -7,16 +7,18 @@
 read_fastq(path)
 }
 \arguments{
-\item{path}{Path to a \code{.fastq}/\code{.fq} file, or a character vector
-of lines.}
+\item{path}{Path to a \code{.fastq}/\code{.fq} file.}
 }
 \value{
 A data frame with columns \code{id}, \code{sequence}, and
 \code{quality}.
 }
 \description{
-Parses a FASTQ file into a data frame of read IDs, sequences,
-and quality strings. Handles the standard 4-lines-per-record layout.
+Reads a FASTQ file from disk and parses it into a data frame
+of read IDs, sequences, and quality strings. \code{path} is always
+treated as a filesystem path — to parse FASTQ content you already have
+in memory, use \code{\link{parse_fastq}} instead, which never touches
+the filesystem.
 }
 \examples{
 tmp <- tempfile(fileext = ".fastq")

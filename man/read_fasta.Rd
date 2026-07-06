@@ -7,16 +7,18 @@
 read_fasta(path)
 }
 \arguments{
-\item{path}{Path to a \code{.fasta}/\code{.fa} file, or a character vector
-of already-read lines.}
+\item{path}{Path to a \code{.fasta}/\code{.fa} file.}
 }
 \value{
 A named character vector of sequences.
 }
 \description{
-Parses a FASTA file (or a character vector of FASTA lines) into
-a named character vector, where names are the header lines (without the
-leading \code{>}) and values are the concatenated sequences.
+Reads a FASTA file from disk and parses it into a named
+character vector, where names are the header lines (without the leading
+\code{>}) and values are the concatenated sequences. \code{path} is
+always treated as a filesystem path — to parse FASTA content you
+already have in memory (e.g. user-pasted text), use
+\code{\link{parse_fasta}} instead, which never touches the filesystem.
 }
 \examples{
 tmp <- tempfile(fileext = ".fasta")
