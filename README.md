@@ -3,21 +3,23 @@
 
 ## **Overview**
 
-BioSeqAligner is a R package designed for DNA sequence analysis. Whether you're a bioinformatician, 
-researcher, or student, this package provides intuitive functions 
-for motif detection, sequence alignment
-visualization, reverse complement calculation, DNA-to-RNA transcription,
-and GC content calculation. It simplifies essential function for manipulating and analyzing DNA sequences.
+BioSeqAligner is an R package for biological sequence analysis and alignment.
+Whether you're a bioinformatician, researcher, or student, this package
+provides intuitive functions for sequence manipulation (motif detection,
+reverse complement, DNA-to-RNA transcription, GC content) alongside a full
+alignment engine (global and local pairwise alignment, multiple sequence
+alignment, alignment metrics, FASTA/FASTQ I/O, batch search, phylogenetics,
+and rich visualization) — so the common tasks that would otherwise require
+juggling several bioinformatics tools live in one package.
 
 ## **Key Features**
-
 
 -   🔍 Motif Finder: Identify all occurrences of a motif in a DNA sequence.
 -   🧬 Reverse Complement: Generate the reverse complement of a sequence.
 -   🧪 DNA to RNA Transcription: Convert DNA sequences to RNA by replacing thymine (T) with uracil (U).
 -   📊 GC Content Calculator: Calculate the percentage of guanine (G) and cytosine (C) in your DNA sequence using S3 objects.
 -   📈 Dot Plot Visualization: Create dot plots to visualize sequence alignments.
--   🧮 Pairwise Alignment: True global (Needleman–Wunsch) and local (Smith–Waterman) alignment with affine gap penalties, for DNA, RNA, and protein.
+-   🧮 Pairwise Alignment: True global (Needleman-Wunsch) and local (Smith-Waterman) alignment with affine gap penalties, for DNA, RNA, and protein.
 -   🎯 Scoring Schemes: Built-in nucleotide and BLOSUM62 substitution matrices, or supply your own.
 -   🧷 Multiple Sequence Alignment: Progressive MSA with consensus and per-column conservation scoring.
 -   📐 Alignment Metrics: Percent identity, similarity, coverage, and gap statistics in one call.
@@ -29,126 +31,103 @@ and GC content calculation. It simplifies essential function for manipulating an
 
 ## **Installation**
 
-#### **For Github**
+#### **From GitHub**
 
-You can install this package directly from github
+You can install this package directly from GitHub.
 
--   devtools::install_github(“Code-krafter22/BioSeqAligner”)
+```r
+devtools::install_github("Code-krafter22/BioSeqAligner")
+library(BioSeqAligner)
+```
 
--   library(BioSeqAligner)
+## **Packages Required**
 
-## **Packages required**
+```r
+install.packages("ggplot2")
+install.packages("stringi")
+install.packages("stringr")
+```
 
--   install.packages(“ggplot2”)
+Two features are optional and only need their package if you use them:
 
--   install.packages(“stringi”)
+```r
+install.packages("ape")     # for nj_tree()
+install.packages("shiny")   # for launch_aligner()
+```
 
--   install.packages(“stringr”)
+## **Load Required Libraries**
 
-## **Load required libraries**
-
--   library(ggplot2)
-
--   library(stringi)
-
--   library(stringr)
+```r
+library(ggplot2)
+library(stringi)
+library(stringr)
+```
 
 ## **Using BioSeqAligner**
 
-### 1. **find_motif()**:
+### 1. **find_motif()**
 
-This function identifies all starting positions of a specified motif
-within a DNA sequence. It performs a linear scan and returns the
-positions where the motif matches the sequence.
+Identifies all starting positions of a specified motif within a DNA sequence.
+Performs a linear scan and returns the positions where the motif matches the
+sequence.
 
+```r
+find_motif("GATCGATCGTAT", "GAT")
+# Returns [1] 1 5
+```
 
-#### **Example**
+### 2. **generate_dot_plot()**
 
--   find_motif(“GATCGATCGTAT”, “GAT”)
+Creates a dot plot to visualize the alignment between two DNA sequences.
+Requires `ggplot2`.
 
--   ***Returns [1] 1 5***
+```r
+generate_dot_plot("GATCGATCGTAT", "GATATCGTCATC")
+# Returns a plot where the X-axis is Sequence 1 and the Y-axis is Sequence 2.
+# Dark red dots mark matching positions; blue dots mark mismatches.
+```
 
-### 2. **generate_dot_plot()**:
-
-This function creates a dot plot to visualize the alignment between two
-DNA sequences.
-
-#### **Library required**
-
--   *library(ggplot2)*
-
-#### **Example**
-
--   generate_dot_plot(“GATCGATCGTAT”, “GATATCGTCATC”)
-
-***Returns a graph plot for sequence alignment where X-axis
-contains the Sequence 1 and Y-axis contains Sequence 2. The dark red dot
-signifies the similarities in the sequence and the blue dot signifies
-the dissimilarities in the sequence.***
-
-### **Dot plot**
-
--  Overview of how the plot looks
+Overview of how the plot looks:
 
 ![](README_files/figure-markdown_strict/dot-plot-1.png)
 
-### 3. **reverse_complement()**:
+### 3. **reverse_complement()**
 
-This function computes the reverse complement of a given DNA sequence by
-reversing it and substituting complementary bases.
+Computes the reverse complement of a given DNA sequence by reversing it and
+substituting complementary bases. Requires `stringi`.
 
-#### **Library required**
+```r
+reverse_complement("GATCGATCGTAT")
+# Returns [1] "ATACGATCGATC"
+```
 
--   *library(stringi)*
+### 4. **transcribe_dna()**
 
-#### **Example**
+Converts a DNA sequence into an RNA sequence by replacing thymine (T) with
+uracil (U). Requires `stringi`.
 
--   reverse_complement(“GATCGATCGTAT”)
+```r
+transcribe_dna("GATCGATCGTAT")
+# Returns [1] "GAUCGAUCGUAU"
+```
 
--   ***Returns [1] “ATACGATCGATC”***
+### 5. **gc_content.S3()**
 
-### 4. **transcribe\_dna()**:
+Constructs an S3 object representing a DNA sequence with validation to ensure
+it contains only valid DNA bases (A, C, G, T), then calculates the GC content
+(percentage of guanine and cytosine). Requires `stringr`.
 
-This function converts a DNA sequence into an RNA sequence by replacing
-thymine (T) with uracil (U).
+```r
+gc_content.S3(DNASequence("ATGC"))
+# Returns [1] 50
+```
 
-#### **Library required**
+### 6. **align()**
 
--   *library(stringi)*
-
-#### **Example**
-
--    transcribe_dna(“GATCGATCGTAT”)
-
--    ***Returns [1] “GAUCGAUCGUAU”***
-
-### 5. **gc_content()**:
-
-Constructs an S3 object representing a DNA sequence with validation to
-ensure it contains only valid DNA bases (A, C, G, T). Calculates the GC
-content (percentage of guanine and cytosine) in a DNA sequence
-represented by a DNASequence object.
-
-#### **Library required**
-
--   *library(stringr)*
-
-#### **Example**
-
--   gc_content.S3(DNASequence(“ATGC”))
-
--   ***Returns [1] 50***
-
-## **Sequence Alignment Engine**
-
-Beyond the visualization helpers above, BioSeqAligner now performs *true*
-sequence alignment using dynamic programming.
-
-### **align()** — pairwise global or local alignment
-
-Global (Needleman–Wunsch) and local (Smith–Waterman) alignment, both with
-affine gap penalties. Works for DNA, RNA, and protein via the chosen scoring
-matrix. Returns an `alignment` object with `print()` and `plot()` methods.
+Performs pairwise sequence alignment via dynamic programming: global
+(Needleman-Wunsch) or local (Smith-Waterman), both with affine gap penalties.
+Works for DNA, RNA, and protein depending on the scoring matrix supplied.
+Returns an `alignment` object with `print()` and `plot()` methods.
 
 ```r
 a <- align("ACGTGGATCGA", "ACGTGCATCGA", method = "global")
@@ -162,32 +141,56 @@ align("TTACGTGGATT", "ACGTGGA", method = "local")
 align("MKVLA", "MKVLW", method = "global", submat = scoring_matrix("BLOSUM62"))
 ```
 
-### **alignment_stats()** — quality metrics
+### 7. **scoring_matrix()**
+
+Builds the substitution matrix used to score aligned residues: a nucleotide
+match/mismatch scheme, or the BLOSUM62 matrix for proteins.
+
+```r
+scoring_matrix("nucleotide", match = 2, mismatch = -1)
+scoring_matrix("BLOSUM62")
+```
+
+### 8. **alignment_stats()**
+
+Returns a one-row summary of alignment-quality metrics: length, matches,
+mismatches, gaps, percent identity, percent gaps, and query coverage.
 
 ```r
 alignment_stats(a)
 # score, length, matches, mismatches, gaps, identity_pct, gap_pct, query_coverage_pct
 ```
 
-### **msa_align()** — multiple sequence alignment
+### 9. **msa_align()**
+
+Aligns three or more sequences using a progressive multiple sequence
+alignment strategy, returning an `msa` object with the aligned rows and a
+consensus sequence. `conservation_scores()` gives a per-column conservation
+score, and `plot()` draws a colour-coded MSA.
 
 ```r
 seqs <- c(s1 = "ACGTGGAA", s2 = "ACGTGCAA", s3 = "ACGTGGATA")
 m <- msa_align(seqs)
 print(m)                    # aligned rows + consensus
-conservation_scores(m)      # per-column conservation (0–1)
+conservation_scores(m)      # per-column conservation (0-1)
 plot(m)                     # colour-coded MSA
 plot(m, color_by = "conservation")
 ```
 
-### **batch_align()** — mini-BLAST search
+### 10. **batch_align()**
+
+Aligns a single query sequence against a set of reference sequences and
+returns a ranked results table — a lightweight, BLAST-like search over a
+small, in-memory database.
 
 ```r
 refs <- c(refA = "TTACGTGGATT", refB = "GGGGCCCC", refC = "AAACGTGGAAA")
 batch_align("ACGTGGA", refs, method = "local")   # ranked hit table
 ```
 
-### **FASTA / FASTQ I/O**
+### 11. **read_fasta() / write_fasta() / read_fastq()**
+
+Reads and writes real sequence files instead of pasted strings.
 
 ```r
 seqs <- read_fasta("sequences.fasta")
@@ -195,38 +198,46 @@ write_fasta(seqs, "out.fasta")
 reads <- read_fastq("reads.fastq")
 ```
 
-### **Phylogenetics** (requires the `ape` package)
+### 12. **nj_tree()**
+
+Computes a distance matrix from an MSA and builds a neighbour-joining
+phylogenetic tree, bridging alignment straight into phylogenetics. Requires
+`ape`.
 
 ```r
 nj_tree(m)   # neighbour-joining tree built from the MSA distance matrix
 ```
 
-### **Interactive app** (requires the `shiny` package)
+### 13. **launch_aligner()**
+
+Launches an interactive Shiny app that ties the package together: paste or
+upload sequences, run pairwise or multiple sequence alignment, and view
+colour-coded plots, summary metrics, and a neighbour-joining tree in the
+browser. Requires `shiny`.
 
 ```r
 launch_aligner()   # paste/upload sequences, align, and view results in the browser
 ```
 
-### **Optional packages**
+## **Error Handling**
 
--   install.packages("ape")     # for nj_tree()
--   install.packages("shiny")   # for launch_aligner()
+**Invalid DNA Sequences**: Functions will stop and display an error if the
+input contains characters other than A, C, G, or T (unless the function
+explicitly supports RNA, protein, or IUPAC ambiguity codes, e.g.
+`validate_sequence()`).
 
-## **Error**:
+```r
+transcribe_dna("ATBX")
+# Error: Input is not a valid DNA sequence.
+```
 
--    **Invalid DNA Sequences**: Functions will stop and display an error if the input contains characters other than A, C, G, or T.
+## **License**
 
-#### **Example**
+This project is licensed under the MIT License. See the LICENSE file for
+details.
 
--   transcribe_dna("ATBX")
--   ***Error: Input is not a valid DNA sequence***
+## **Contact**
 
-### **License**:
+For questions or feedback, reach out via GitHub Issues.
 
--   This project is licensed under the MIT License. See the LICENSE file for details.
-
-### **Contact**:
-
--   For questions or feedback, reach out via GitHub Issues.
-
-## **Happy sequencing!** 
+## **Happy sequencing!**
