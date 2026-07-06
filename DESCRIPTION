@@ -4,19 +4,28 @@ Title: A DNA sequence alignment, visualization and manipulation tool
 Version: 0.1.0
 Author: Kashvi Shah
 Maintainer: <kashvishah4@gmail.com>
-Description: A collection of tools for DNA sequence analysis. This package provides functions for finding motifs, generating dot plots for sequence 
-    alignment, computing reverse complements, transcribing DNA to RNA, and calculating GC content. It aims to simplify common tasks in bioinformatics and molecular biology research.
+Description: A collection of tools for biological sequence analysis and
+    alignment. Alongside sequence manipulation helpers (motif finding, reverse
+    complement, transcription, GC content, k-mers, codon usage), the package
+    provides true pairwise alignment (Needleman-Wunsch and Smith-Waterman with
+    affine gaps) for DNA, RNA, and protein; progressive multiple sequence
+    alignment; alignment-quality metrics; FASTA/FASTQ I/O; batch (mini-BLAST)
+    search; colour-coded alignment and dot-plot visualization; neighbour-joining
+    trees; and an interactive Shiny app. It aims to gather in one package the
+    common tasks that otherwise require juggling several bioinformatics tools.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/Code-krafter22/BioSeqAligner
 BugReports: https://github.com/Code-krafter22/BioSeqAligner/issues
-RoxygenNote: 7.3.2
 Imports:
     ggplot2,
     stringi,
     stringr
 Roxygen: list(markdown = TRUE)
-Suggests: 
-    testthat (>= 3.0.0)
+Suggests:
+    testthat (>= 3.0.0),
+    ape,
+    shiny
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

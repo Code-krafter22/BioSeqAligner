@@ -17,6 +17,15 @@ and GC content calculation. It simplifies essential function for manipulating an
 -   🧪 DNA to RNA Transcription: Convert DNA sequences to RNA by replacing thymine (T) with uracil (U).
 -   📊 GC Content Calculator: Calculate the percentage of guanine (G) and cytosine (C) in your DNA sequence using S3 objects.
 -   📈 Dot Plot Visualization: Create dot plots to visualize sequence alignments.
+-   🧮 Pairwise Alignment: True global (Needleman–Wunsch) and local (Smith–Waterman) alignment with affine gap penalties, for DNA, RNA, and protein.
+-   🎯 Scoring Schemes: Built-in nucleotide and BLOSUM62 substitution matrices, or supply your own.
+-   🧷 Multiple Sequence Alignment: Progressive MSA with consensus and per-column conservation scoring.
+-   📐 Alignment Metrics: Percent identity, similarity, coverage, and gap statistics in one call.
+-   🗂️ FASTA / FASTQ I/O: Read and write real sequence files.
+-   🚀 Batch (mini-BLAST) Search: Rank one query against many references.
+-   🌳 Phylogenetics: Distance matrix and neighbour-joining tree straight from an MSA.
+-   🎨 Rich Visualization: Colour-coded pairwise and MSA plots (ggplot2).
+-   🖥️ Interactive Shiny App: `launch_aligner()` ties it all together in the browser.
 
 ## **Installation**
 
@@ -129,6 +138,79 @@ represented by a DNASequence object.
 -   gc_content.S3(DNASequence(“ATGC”))
 
 -   ***Returns [1] 50***
+
+## **Sequence Alignment Engine**
+
+Beyond the visualization helpers above, BioSeqAligner now performs *true*
+sequence alignment using dynamic programming.
+
+### **align()** — pairwise global or local alignment
+
+Global (Needleman–Wunsch) and local (Smith–Waterman) alignment, both with
+affine gap penalties. Works for DNA, RNA, and protein via the chosen scoring
+matrix. Returns an `alignment` object with `print()` and `plot()` methods.
+
+```r
+a <- align("ACGTGGATCGA", "ACGTGCATCGA", method = "global")
+print(a)   # side-by-side view with a match line, score, and % identity
+plot(a)    # colour-coded tile plot (matches / mismatches / gaps)
+
+# Local alignment finds a conserved region inside a longer sequence
+align("TTACGTGGATT", "ACGTGGA", method = "local")
+
+# Protein alignment with BLOSUM62
+align("MKVLA", "MKVLW", method = "global", submat = scoring_matrix("BLOSUM62"))
+```
+
+### **alignment_stats()** — quality metrics
+
+```r
+alignment_stats(a)
+# score, length, matches, mismatches, gaps, identity_pct, gap_pct, query_coverage_pct
+```
+
+### **msa_align()** — multiple sequence alignment
+
+```r
+seqs <- c(s1 = "ACGTGGAA", s2 = "ACGTGCAA", s3 = "ACGTGGATA")
+m <- msa_align(seqs)
+print(m)                    # aligned rows + consensus
+conservation_scores(m)      # per-column conservation (0–1)
+plot(m)                     # colour-coded MSA
+plot(m, color_by = "conservation")
+```
+
+### **batch_align()** — mini-BLAST search
+
+```r
+refs <- c(refA = "TTACGTGGATT", refB = "GGGGCCCC", refC = "AAACGTGGAAA")
+batch_align("ACGTGGA", refs, method = "local")   # ranked hit table
+```
+
+### **FASTA / FASTQ I/O**
+
+```r
+seqs <- read_fasta("sequences.fasta")
+write_fasta(seqs, "out.fasta")
+reads <- read_fastq("reads.fastq")
+```
+
+### **Phylogenetics** (requires the `ape` package)
+
+```r
+nj_tree(m)   # neighbour-joining tree built from the MSA distance matrix
+```
+
+### **Interactive app** (requires the `shiny` package)
+
+```r
+launch_aligner()   # paste/upload sequences, align, and view results in the browser
+```
+
+### **Optional packages**
+
+-   install.packages("ape")     # for nj_tree()
+-   install.packages("shiny")   # for launch_aligner()
 
 ## **Error**:
 
