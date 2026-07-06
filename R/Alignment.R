@@ -117,8 +117,8 @@ align <- function(seq1, seq2,
   } else {
     score <- max(M)
     idx <- which(M == score, arr.ind = TRUE)[1, ]
-    ci <- idx[1]
-    cj <- idx[2]
+    ci <- unname(idx[1])
+    cj <- unname(idx[2])
     layer <- 1L
   }
 

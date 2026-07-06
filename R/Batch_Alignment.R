@@ -15,7 +15,10 @@
 #' @param top If not \code{NULL}, keep only the top \code{n} hits.
 #'
 #' @return A data frame ranked by score, with reference name, score, percent
-#'   identity, alignment length, and the reference match coordinates.
+#'   identity, query coverage (percent of the query length actually aligned —
+#'   important for local alignment, where a short coincidental match can
+#'   otherwise show a misleadingly high identity), alignment length, and the
+#'   reference match coordinates.
 #'
 #' @examples
 #' refs <- c(refA = "TTACGTGGATT", refB = "GGGGCCCC", refC = "AAACGTGGAAA")
@@ -39,6 +42,7 @@ batch_align <- function(query, refs,
       reference = nm,
       score = a$score,
       identity_pct = st$identity_pct,
+      query_coverage_pct = st$query_coverage_pct,
       aln_length = st$length,
       ref_start = a$start2,
       ref_end = a$end2,

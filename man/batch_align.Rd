@@ -31,7 +31,10 @@ batch_align(
 }
 \value{
 A data frame ranked by score, with reference name, score, percent
-identity, alignment length, and the reference match coordinates.
+identity, query coverage (percent of the query length actually aligned —
+important for local alignment, where a short coincidental match can
+otherwise show a misleadingly high identity), alignment length, and the
+reference match coordinates.
 }
 \description{
 Aligns a single query sequence against a set of reference sequences and

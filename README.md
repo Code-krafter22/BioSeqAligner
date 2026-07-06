@@ -28,6 +28,7 @@ juggling several bioinformatics tools live in one package.
 -   🌳 Phylogenetics: Distance matrix and neighbour-joining tree straight from an MSA.
 -   🎨 Rich Visualization: Colour-coded pairwise and MSA plots (ggplot2).
 -   🖥️ Interactive Shiny App: `launch_aligner()` ties it all together in the browser.
+-   🧫 Primer Design + Specificity Screening: `design_and_validate_primers()` runs Primer3 and checks every candidate against your off-target list in one call.
 
 ## **Installation**
 
@@ -48,11 +49,18 @@ install.packages("stringi")
 install.packages("stringr")
 ```
 
-Two features are optional and only need their package if you use them:
+Three features are optional and only need their dependency if you use them:
 
 ```r
 install.packages("ape")     # for nj_tree()
 install.packages("shiny")   # for launch_aligner()
+```
+
+```sh
+# for design_primers() / design_and_validate_primers() — a system binary,
+# not an R package
+brew install primer3       # macOS
+apt-get install primer3    # Linux
 ```
 
 ## **Load Required Libraries**
@@ -259,6 +267,42 @@ browser. Requires `shiny`.
 ```r
 launch_aligner()
 # Opens the BioSeqAligner Shiny app in your browser.
+```
+
+### 17. **design_primers()**
+
+Runs the real Primer3 engine (`primer3_core`) on a target sequence to design
+forward/reverse primer pairs, using Primer3's own thermodynamic model for
+melting temperature and secondary-structure checks. Requires a system install
+of Primer3 (`brew install primer3` on macOS, `apt-get install primer3` on
+Linux).
+
+```r
+target <- "ATGGCTAGCATCGATCGTAGCTAGCATCGATCGTAGCTAGCATCGATCGTAGCTAGC..."
+design_primers(target, product_size_range = c(70, 120), num_return = 3)
+#   pair_id             left_seq            right_seq left_tm right_tm product_size  penalty
+# 1       0 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA  59.759   58.208           77 2.033219
+# 2       1 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA  59.759   58.208           93 2.033219
+# 3       2 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA  59.759   58.208          109 2.033219
+```
+
+### 18. **design_and_validate_primers()**
+
+Runs `design_primers()` and immediately screens every candidate primer with
+`batch_align()` against a set of sequences you supply (the intended target
+plus known paralogs/isoforms/off-targets) — primer design and specificity
+checking in a single call. A hit only counts against a primer if it clears
+both an identity threshold and a query-coverage threshold, so a short
+coincidental match can't masquerade as a real off-target. Requires Primer3.
+
+```r
+offs <- c(GENE_A = target, PARALOG_B = near_identical_paralog_seq)
+design_and_validate_primers(target, offs,
+  intended_target = "GENE_A", product_size_range = c(70, 120), num_return = 2
+)
+#   pair_id             left_seq            right_seq product_size max_offtarget_identity specific
+# 1       0 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA           77                    100    FALSE
+# 2       1 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA           93                    100    FALSE
 ```
 
 ## **Error Handling**

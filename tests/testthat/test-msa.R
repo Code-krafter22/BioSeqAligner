@@ -4,7 +4,7 @@ test_that("msa_align returns equal-length rows in input order", {
   expect_s3_class(m, "msa")
   expect_length(unique(nchar(m$aligned)), 1)
   expect_equal(names(m$aligned), names(seqs))
-  expect_equal(nchar(m$consensus), nchar(m$aligned[1]))
+  expect_equal(nchar(m$consensus), unname(nchar(m$aligned[1])))
 })
 
 test_that("conservation scores lie in [0, 1] with one per column", {
