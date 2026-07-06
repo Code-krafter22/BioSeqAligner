@@ -83,7 +83,7 @@ Requires `ggplot2`.
 
 ```r
 generate_dot_plot("GATCGATCGTAT", "GATATCGTCATC")
-# Returns a plot where the X-axis is Sequence 1 and the Y-axis is Sequence 2.
+# Returns a ggplot dot plot: X-axis is Sequence 1, Y-axis is Sequence 2.
 # Dark red dots mark matching positions; blue dots mark mismatches.
 ```
 
@@ -127,18 +127,15 @@ gc_content.S3(DNASequence("ATGC"))
 Performs pairwise sequence alignment via dynamic programming: global
 (Needleman-Wunsch) or local (Smith-Waterman), both with affine gap penalties.
 Works for DNA, RNA, and protein depending on the scoring matrix supplied.
-Returns an `alignment` object with `print()` and `plot()` methods.
 
 ```r
 a <- align("ACGTGGATCGA", "ACGTGCATCGA", method = "global")
-print(a)   # side-by-side view with a match line, score, and % identity
-plot(a)    # colour-coded tile plot (matches / mismatches / gaps)
-
-# Local alignment finds a conserved region inside a longer sequence
-align("TTACGTGGATT", "ACGTGGA", method = "local")
-
-# Protein alignment with BLOSUM62
-align("MKVLA", "MKVLW", method = "global", submat = scoring_matrix("BLOSUM62"))
+print(a)
+# Global alignment  |  score = 19  |  identity = 90.9%
+#
+# seq1   ACGTGGATCGA
+#        ||||| |||||
+# seq2   ACGTGCATCGA
 ```
 
 ### 7. **scoring_matrix()**
@@ -147,8 +144,12 @@ Builds the substitution matrix used to score aligned residues: a nucleotide
 match/mismatch scheme, or the BLOSUM62 matrix for proteins.
 
 ```r
-scoring_matrix("nucleotide", match = 2, mismatch = -1)
-scoring_matrix("BLOSUM62")
+scoring_matrix("nucleotide", match = 2, mismatch = -1)[c("A","C","G","T"), c("A","C","G","T")]
+#    A  C  G  T
+# A  2 -1 -1 -1
+# C -1  2 -1 -1
+# G -1 -1  2 -1
+# T -1 -1 -1  2
 ```
 
 ### 8. **alignment_stats()**
@@ -158,26 +159,39 @@ mismatches, gaps, percent identity, percent gaps, and query coverage.
 
 ```r
 alignment_stats(a)
-# score, length, matches, mismatches, gaps, identity_pct, gap_pct, query_coverage_pct
+#   method score length matches mismatches gaps identity_pct gap_pct query_coverage_pct
+# 1 global    19     11      10          1    0        90.91       0                100
 ```
 
 ### 9. **msa_align()**
 
 Aligns three or more sequences using a progressive multiple sequence
 alignment strategy, returning an `msa` object with the aligned rows and a
-consensus sequence. `conservation_scores()` gives a per-column conservation
-score, and `plot()` draws a colour-coded MSA.
+consensus sequence.
 
 ```r
 seqs <- c(s1 = "ACGTGGAA", s2 = "ACGTGCAA", s3 = "ACGTGGATA")
 m <- msa_align(seqs)
-print(m)                    # aligned rows + consensus
-conservation_scores(m)      # per-column conservation (0-1)
-plot(m)                     # colour-coded MSA
-plot(m, color_by = "conservation")
+print(m)
+# Multiple sequence alignment: 3 sequences x 9 columns
+#
+# s1        ACGTGGA-A
+# s2        ACGTGCA-A
+# s3        ACGTGGATA
+# consensus ACGTGGATA
 ```
 
-### 10. **batch_align()**
+### 10. **conservation_scores()**
+
+Computes, for each column of an `msa` object, the fraction of rows carrying
+the most common residue (gaps excluded). A value of 1 means fully conserved.
+
+```r
+conservation_scores(m)
+# Returns [1] 1.00 1.00 1.00 1.00 1.00 0.67 1.00 1.00 1.00
+```
+
+### 11. **batch_align()**
 
 Aligns a single query sequence against a set of reference sequences and
 returns a ranked results table — a lightweight, BLAST-like search over a
@@ -185,30 +199,57 @@ small, in-memory database.
 
 ```r
 refs <- c(refA = "TTACGTGGATT", refB = "GGGGCCCC", refC = "AAACGTGGAAA")
-batch_align("ACGTGGA", refs, method = "local")   # ranked hit table
+batch_align("ACGTGGA", refs, method = "local")
+#   reference score identity_pct aln_length ref_start ref_end
+# 1      refA    14          100          7         3       9
+# 2      refC    14          100          7         3       9
+# 3      refB     5           75          4         1       4
 ```
 
-### 11. **read_fasta() / write_fasta() / read_fastq()**
+### 12. **read_fasta()**
 
-Reads and writes real sequence files instead of pasted strings.
+Reads a FASTA file into a named character vector of sequences, so you work
+from real files instead of pasted strings.
 
 ```r
-seqs <- read_fasta("sequences.fasta")
-write_fasta(seqs, "out.fasta")
-reads <- read_fastq("reads.fastq")
+read_fasta("sequences.fasta")
+#      geneA      geneB
+# "ACGTGGCA" "TTTTGGCC"
 ```
 
-### 12. **nj_tree()**
+### 13. **write_fasta()**
+
+Writes a named character vector of sequences back out to a FASTA file,
+wrapping long sequences at a fixed line width.
+
+```r
+write_fasta(c(geneA = "ACGTGGCA", geneB = "TTTTGGCC"), "out.fasta")
+# Writes a FASTA file with headers >geneA / >geneB and wrapped sequence lines.
+```
+
+### 14. **read_fastq()**
+
+Parses a FASTQ file into a data frame of read IDs, sequences, and quality
+strings.
+
+```r
+read_fastq("reads.fastq")
+#    id sequence quality
+# 1  r1     ACGT    IIII
+```
+
+### 15. **nj_tree()**
 
 Computes a distance matrix from an MSA and builds a neighbour-joining
 phylogenetic tree, bridging alignment straight into phylogenetics. Requires
 `ape`.
 
 ```r
-nj_tree(m)   # neighbour-joining tree built from the MSA distance matrix
+nj_tree(m)
+# Returns an object of class "phylo" and plots the neighbour-joining tree.
 ```
 
-### 13. **launch_aligner()**
+### 16. **launch_aligner()**
 
 Launches an interactive Shiny app that ties the package together: paste or
 upload sequences, run pairwise or multiple sequence alignment, and view
@@ -216,7 +257,8 @@ colour-coded plots, summary metrics, and a neighbour-joining tree in the
 browser. Requires `shiny`.
 
 ```r
-launch_aligner()   # paste/upload sequences, align, and view results in the browser
+launch_aligner()
+# Opens the BioSeqAligner Shiny app in your browser.
 ```
 
 ## **Error Handling**
