@@ -30,6 +30,7 @@ juggling several bioinformatics tools live in one package.
 -   🖥️ Interactive Shiny App: `launch_aligner()` ties it all together in the browser.
 -   🧫 Primer Design + Specificity Screening: `design_and_validate_primers()` runs Primer3 and checks every candidate against your off-target list in one call.
 -   🧬 CpG Island Detection + Curated Disease Lookup: `find_cpg_islands()` locates CpG islands from sequence; `cpg_disease_lookup()` checks a small curated table of well-established gene-disease methylation associations.
+-   🔬 Bisulfite-Aware Primer Design: `bisulfite_convert()` simulates bisulfite treatment; `design_bisulfite_primers()` designs primers against a converted template for MSP/BSP workflows.
 
 ## **Installation**
 
@@ -368,6 +369,39 @@ sequence fact is never conflated with literature curation.
 cpg_disease_lookup("MLH1")
 #   gene                                 disease                                               mechanism
 # 1 MLH1 Sporadic colorectal cancer (Lynch-like) Promoter hypermethylation silences DNA mismatch repair
+```
+
+### 23. **bisulfite_convert()**
+
+Simulates sodium bisulfite treatment of DNA: unmethylated cytosine
+converts to thymine, methylated cytosine (protected) stays cytosine. CpG
+context is always read from the original sequence, so conversion is a
+single deterministic pass. Since non-CpG methylation is negligible in
+mammalian DNA, `assume_methylated_cpg = FALSE` (default) converts every
+cytosine (a fully unmethylated template); `assume_methylated_cpg = TRUE`
+protects only CpG-context cytosines (a fully CpG-methylated template).
+
+```r
+bisulfite_convert("ACGTCCGACG")
+# [1] "ATGTTTGATG"
+bisulfite_convert("ACGTCCGACG", assume_methylated_cpg = TRUE)
+# [1] "ACGTTCGACG"
+```
+
+### 24. **design_bisulfite_primers()**
+
+Runs `bisulfite_convert()` on a sequence for the chosen reference
+methylation state, then `design_primers()` on the converted template —
+automating the standard first two steps of methylation-specific PCR (MSP)
+or bisulfite sequencing PCR (BSP) primer design. It does not verify that a
+returned pair actually discriminates between methylation states; check
+that yourself (e.g. against `find_cpg_islands()` output) before ordering.
+Requires Primer3.
+
+```r
+design_bisulfite_primers(promoter_seq,
+  methylation_state = "unmethylated", product_size_range = c(100, 200)
+)
 ```
 
 ## **Error Handling**
