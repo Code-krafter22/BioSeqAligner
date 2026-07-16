@@ -29,6 +29,7 @@ juggling several bioinformatics tools live in one package.
 -   🎨 Rich Visualization: Colour-coded pairwise and MSA plots (ggplot2).
 -   🖥️ Interactive Shiny App: `launch_aligner()` ties it all together in the browser.
 -   🧫 Primer Design + Specificity Screening: `design_and_validate_primers()` runs Primer3 and checks every candidate against your off-target list in one call.
+-   🧬 CpG Island Detection + Curated Disease Lookup: `find_cpg_islands()` locates CpG islands from sequence; `cpg_disease_lookup()` checks a small curated table of well-established gene-disease methylation associations.
 
 ## **Installation**
 
@@ -331,6 +332,42 @@ design_and_validate_primers(target, offs,
 #   pair_id             left_seq            right_seq product_size max_offtarget_identity specific
 # 1       0 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA           77                    100    FALSE
 # 2       1 TGGCTAGCATCGATCGTAGC TCGATGCTAGCTACGATCGA           93                    100    FALSE
+```
+
+### 21. **find_cpg_islands()**
+
+Scans a DNA sequence with a sliding window and flags CpG islands using the
+standard sequence-based definition (GC content and observed/expected CpG
+ratio above threshold, sustained over a minimum length). This is a purely
+structural computation on the sequence you provide — it identifies where a
+CpG island exists, but does **not** tell you whether it's actually
+methylated in any real sample; methylation is a chemical mark that varies
+by tissue/individual/disease and can only be measured from real
+bisulfite-sequencing or methylation-array data. Validated against the real
+human MLH1 promoter (RefSeq `NC_000003.12:36992465-36993965`), whose CpG
+island is well-documented in the cancer epigenetics literature:
+
+```r
+promoter <- read_fasta("mlh1_promoter.fasta")
+find_cpg_islands(promoter, window = 200, step = 5)
+#   start  end length gc_percent obs_exp_ratio
+# 1    16 1500   1485   59.75346     0.9081243
+```
+
+### 22. **cpg_disease_lookup()**
+
+Looks up a gene symbol in a small, hand-curated (not computed) reference
+table of genes whose promoter CpG islands are well-established in the
+literature as recurrently hyper/hypomethylated in specific diseases.
+Finding no entry does not mean no association exists — only that it isn't
+in this small table. Use `find_cpg_islands()` separately to locate islands
+from sequence; the two are intentionally kept apart so a structural
+sequence fact is never conflated with literature curation.
+
+```r
+cpg_disease_lookup("MLH1")
+#   gene                                 disease                                               mechanism
+# 1 MLH1 Sporadic colorectal cancer (Lynch-like) Promoter hypermethylation silences DNA mismatch repair
 ```
 
 ## **Error Handling**

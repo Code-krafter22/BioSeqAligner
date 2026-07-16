@@ -11,9 +11,11 @@ Description: A collection of tools for biological sequence analysis and
     affine gaps) for DNA, RNA, and protein; progressive multiple sequence
     alignment; alignment-quality metrics; FASTA/FASTQ I/O; batch (mini-BLAST)
     search; colour-coded alignment and dot-plot visualization; neighbour-joining
-    trees; primer design via Primer3 with built-in specificity screening; and
-    an interactive Shiny app. It aims to gather in one package the common
-    tasks that otherwise require juggling several bioinformatics tools.
+    trees; primer design via Primer3 with built-in specificity screening;
+    sequence-based CpG island detection with a curated (non-computed) lookup
+    of well-established gene-disease methylation associations; and an
+    interactive Shiny app. It aims to gather in one package the common tasks
+    that otherwise require juggling several bioinformatics tools.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
