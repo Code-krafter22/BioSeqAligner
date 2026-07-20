@@ -91,6 +91,9 @@ design_primers <- function(sequence,
                            num_return = 5,
                            primer3_path = NULL, config_path = NULL) {
   sequence <- toupper(as.character(sequence))
+  # Reject anything but nucleotide codes before it reaches Primer3's boulder-IO
+  # input, so an embedded newline + KEY=val can't inject arbitrary parameters.
+  validate_sequence(sequence, "iupac")
   exe <- .primer3_exe(primer3_path)
   cfg <- .primer3_config_dir(exe, config_path)
 

@@ -1,3 +1,9 @@
+# GC percent of a sequence string, base R, single source of truth.
+.gc_percent <- function(sequence) {
+  sequence <- toupper(as.character(sequence))
+  100 * nchar(gsub("[^GC]", "", sequence)) / nchar(sequence)
+}
+
 #' @title Validate a Biological Sequence
 #'
 #' @description Checks that a sequence contains only characters allowed for the
@@ -95,8 +101,7 @@ seq_composition <- function(sequence) {
   counts <- table(chars)
   out <- list(counts = counts)
   if (all(names(counts) %in% c("A", "C", "G", "T", "U", "N"))) {
-    gc <- sum(counts[names(counts) %in% c("G", "C")])
-    out$gc_percent <- 100 * gc / nchar(sequence)
+    out$gc_percent <- .gc_percent(sequence)
   }
   out
 }

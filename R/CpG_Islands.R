@@ -57,12 +57,13 @@ find_cpg_islands <- function(sequence, window = 200, step = 1,
                              min_length = window) {
   sequence <- toupper(as.character(sequence))
   n <- nchar(sequence)
+  no_islands <- function() data.frame(
+    start = integer(0), end = integer(0), length = integer(0),
+    gc_percent = numeric(0), obs_exp_ratio = numeric(0),
+    stringsAsFactors = FALSE
+  )
   if (n < window) {
-    return(data.frame(
-      start = integer(0), end = integer(0), length = integer(0),
-      gc_percent = numeric(0), obs_exp_ratio = numeric(0),
-      stringsAsFactors = FALSE
-    ))
+    return(no_islands())
   }
 
   chars <- strsplit(sequence, "")[[1]]
@@ -89,11 +90,7 @@ find_cpg_islands <- function(sequence, window = 200, step = 1,
 
   passes <- gc_pct >= gc_threshold & oe_ratio >= oe_threshold
   if (!any(passes)) {
-    return(data.frame(
-      start = integer(0), end = integer(0), length = integer(0),
-      gc_percent = numeric(0), obs_exp_ratio = numeric(0),
-      stringsAsFactors = FALSE
-    ))
+    return(no_islands())
   }
 
   pass_starts <- starts[passes]

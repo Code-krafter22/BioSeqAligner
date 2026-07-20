@@ -27,9 +27,7 @@ SystemRequirements: Primer3 (>= 2.5.0) <https://primer3.org>, required only
     for design_primers(), design_and_validate_primers(), and
     design_bisulfite_primers()
 Imports:
-    ggplot2,
-    stringi,
-    stringr
+    ggplot2
 Roxygen: list(markdown = TRUE)
 Suggests:
     testthat (>= 3.0.0),

@@ -10,7 +10,6 @@
 #' @examples
 #' sequence <- ("ATCGCTCA") # Returns "TGAGCGAT"
 #'
-#' @import stringi
 #' @export
 reverse_complement <- function(sequence) {
   # Check if the sequence is a DNA sequence
@@ -20,9 +19,7 @@ reverse_complement <- function(sequence) {
 
   # Reverse complement the sequence
   complement <- chartr("ACGT", "TGCA", sequence)
-  reverse_complement <- stri_reverse(complement)
-
-  return(reverse_complement)
+  paste(rev(strsplit(complement, "")[[1]]), collapse = "")
 }
 #'
 #' @title Transcribe DNA to RNA
@@ -81,16 +78,11 @@ DNASequence <- function(sequence) {
 #' dna_seq <- DNASequence("ATGCGC")
 #' gc_content.S3(dna_seq)  # Returns 66.67
 #'
-#' @import stringr
-#'
 #' @export
 gc_content.S3 <- function(sequence) {
   if (!inherits(sequence, "DNASequence")) {
     stop("Input must be of class 'DNASequence'.")
   }
-  sequence_value <- attr(sequence, "sequence")
-  gc_count <- sum(str_count(sequence_value, "[GC]"))
-  gc_percent <- (gc_count / nchar(sequence_value)) * 100
-  return(gc_percent)
+  .gc_percent(attr(sequence, "sequence"))
 }
 
