@@ -47,8 +47,6 @@ library(BioSeqAligner)
 
 ```r
 install.packages("ggplot2")
-install.packages("stringi")
-install.packages("stringr")
 ```
 
 Three features are optional and only need their dependency if you use them:
@@ -69,8 +67,6 @@ apt-get install primer3    # Linux
 
 ```r
 library(ggplot2)
-library(stringi)
-library(stringr)
 ```
 
 ## **Using BioSeqAligner**
@@ -104,7 +100,7 @@ Overview of how the plot looks:
 ### 3. **reverse_complement()**
 
 Computes the reverse complement of a given DNA sequence by reversing it and
-substituting complementary bases. Requires `stringi`.
+substituting complementary bases.
 
 ```r
 reverse_complement("GATCGATCGTAT")
@@ -114,7 +110,7 @@ reverse_complement("GATCGATCGTAT")
 ### 4. **transcribe_dna()**
 
 Converts a DNA sequence into an RNA sequence by replacing thymine (T) with
-uracil (U). Requires `stringi`.
+uracil (U).
 
 ```r
 transcribe_dna("GATCGATCGTAT")
@@ -125,7 +121,7 @@ transcribe_dna("GATCGATCGTAT")
 
 Constructs an S3 object representing a DNA sequence with validation to ensure
 it contains only valid DNA bases (A, C, G, T), then calculates the GC content
-(percentage of guanine and cytosine). Requires `stringr`.
+(percentage of guanine and cytosine).
 
 ```r
 gc_content.S3(DNASequence("ATGC"))
